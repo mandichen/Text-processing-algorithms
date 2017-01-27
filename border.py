@@ -23,7 +23,8 @@ def computeKMP_next(x):  #kmp next
     kmp_next.append(k)
     return kmp_next
 
-#def searchWithSMA(x,y):
+#def constractSMA(x):
+
 
 
 
