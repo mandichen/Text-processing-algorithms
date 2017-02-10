@@ -2,7 +2,7 @@ import numpy as np
 #from numpy import nan as NA
 import pandas as pd
 
-def edit_distance(x,y,sub,de,ins):
+def edit_distance(x,y,sam,sub,de,ins):
     m=len(x)+1
     n=len(y)+1
     t = np.zeros((m,n))
@@ -15,12 +15,12 @@ def edit_distance(x,y,sub,de,ins):
     for i in range(1,m):
         for j in range(1,n):
             if x[i-1]==y[j-1]:
-                t[i][j]=t[i-1][j-1]
+                t[i][j]=t[i-1][j-1]+sam
             else:
                 sub_move=t[i-1][j-1]+sub
                 del_move=t[i-1][j]+de
                 ins_move=t[i][j-1]+ins
-                t[i][j]=min(sub_move,del_move,ins_move)
+                t[i][j]=max(sub_move,del_move,ins_move) #min/max might be vary
     return pd.DataFrame(t,columns=["-"]+[k for k in y],index=["-"]+[k for k in x],dtype=int)
 
 def local_distance(x,y,sam,sub,de,ins):
@@ -78,19 +78,21 @@ def gap_alignment(x,y,sub,sam,f,h):
 
 
 
-test1=edit_distance("EAWACQGKL","ERDAWCQPGKWY",3,1,1)
-test2=edit_distance("ACGA","ATGCTA",1,1,1)
-test3=local_distance("EAWACQGKL","ERDAWCQPGKWY",1,-3,-1,-1)
-test4=gap_alignment("EAWACQGKL","ERDAWCQPGKWY",3,0,3,1)
-print("global distance:")
-print(test1)
-print()
-print(test2)
+
+test2=edit_distance("GATTACA","GCATGCU",1,-1,-1,-1)
+test3=local_distance("GATTACA","GCATGCU",1,-1,-1,-1)
+print("examples:")
 print()
 print("local distance:")
 print(test3)
+print("global distance:")
+print(test2)
 print()
-print("gap alignment:")
-for t in test4:
-    print(t)
-    print()
+test5=edit_distance("AGTACGCA","TATGC",2,-1,-2,-2)
+print(test5)
+print()
+test6=edit_distance("AGTA","TATGC",2,-1,-2,-2)
+print(test6)
+print()
+test7=edit_distance("ACGC","CGTAT",2,-1,-2,-2)
+print(test7)
